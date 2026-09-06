@@ -1,0 +1,1916 @@
+/* GridOS — desktop dashboard */
+
+.gridos-app {
+  display: flex;
+  min-height: 100dvh;
+  background: #0d0d0d;
+  color: #f4f4f5;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.gridos-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 100%);
+}
+
+.gridos-logo {
+  margin: 0 0 20px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #00ff88;
+}
+
+.gridos-node-card {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 20px;
+}
+
+.gridos-node-label {
+  margin: 0 0 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #a1a1aa;
+  text-transform: uppercase;
+}
+
+.gridos-node-name {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.gridos-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(0, 255, 136, 0.12);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+.gridos-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.gridos-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #a1a1aa;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.gridos-nav-item:hover {
+  color: #e4e4e7;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.gridos-nav-item svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.gridos-nav-item--active {
+  color: #fafafa;
+  background: rgba(0, 255, 136, 0.08);
+  box-shadow: inset 3px 0 0 #00ff88;
+}
+
+a.gridos-nav-item {
+  text-decoration: none;
+}
+
+.gridos-nav-item:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.gridos-nav-item:disabled:hover {
+  color: #a1a1aa;
+  background: transparent;
+}
+
+.gridos-logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.gridos-deploy {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #00ff88;
+  color: #0a0a0a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.gridos-deploy:hover {
+  filter: brightness(1.05);
+}
+
+.gridos-deploy:active {
+  transform: translateY(1px);
+}
+
+a.gridos-deploy {
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.gridos-deploy.gridos-deploy--active {
+  box-shadow: 0 0 0 2px #0d0d0d, 0 0 0 4px rgba(0, 255, 136, 0.55);
+}
+
+.gridos-sidebar-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-sidebar-foot button {
+  background: none;
+  border: none;
+  color: #71717a;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 6px 0;
+}
+
+.gridos-sidebar-foot button:hover {
+  color: #a1a1aa;
+}
+
+.gridos-sidebar-foot .gridos-logout {
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+.gridos-sidebar-foot .gridos-logout:hover {
+  color: #f87171;
+}
+
+.gridos-sidebar-foot-link {
+  display: block;
+  background: none;
+  border: none;
+  color: #71717a;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 6px 0;
+  text-decoration: none;
+}
+
+.gridos-sidebar-foot-link:hover {
+  color: #a1a1aa;
+}
+
+.gridos-sidebar-foot-link--active {
+  color: #00ff88;
+  font-weight: 700;
+}
+
+.gridos-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: auto;
+}
+
+.gridos-topbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.gridos-stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #a1a1aa;
+}
+
+.gridos-stat-chip strong {
+  color: #fafafa;
+  font-weight: 700;
+}
+
+.gridos-stat-chip--green strong {
+  color: #00ff88;
+}
+
+.gridos-topbar-spacer {
+  flex: 1;
+}
+
+.gridos-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gridos-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #a1a1aa;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.gridos-icon-btn:hover {
+  border-color: rgba(0, 255, 136, 0.35);
+  color: #00ff88;
+}
+
+.gridos-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 136, 0.4);
+  background: #18181b;
+  color: #00ff88;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.gridos-content {
+  padding: 20px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gridos-row-top {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.4fr) minmax(220px, 0.85fr) minmax(200px, 0.75fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (max-width: 1100px) {
+  .gridos-row-top {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gridos-row-top .gridos-card--trend {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .gridos-app {
+    flex-direction: column;
+  }
+
+  .gridos-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .gridos-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .gridos-nav-item {
+    flex: 1;
+    min-width: 100px;
+    justify-content: center;
+  }
+
+  .gridos-deploy {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .gridos-sidebar-foot {
+    flex-direction: row;
+    width: 100%;
+    border-top: none;
+    padding-top: 0;
+    justify-content: flex-end;
+  }
+
+  .gridos-row-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-card {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  padding: 18px;
+}
+
+.gridos-card--dynamics {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .gridos-card--dynamics {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+.gridos-dynamics-copy h2 {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-dynamics-copy p {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #a1a1aa;
+  max-width: 320px;
+}
+
+.gridos-submetrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gridos-submetric {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-submetric span {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #71717a;
+  margin-bottom: 4px;
+}
+
+.gridos-submetric strong {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fafafa;
+}
+
+.gridos-card--balance {
+  background: linear-gradient(145deg, #00ff88 0%, #00cc6a 100%);
+  border: 1px solid rgba(0, 255, 136, 0.5);
+  color: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+}
+
+.gridos-card--balance .gridos-balance-label {
+  margin: 0 0 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.gridos-card--balance .gridos-balance-value {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.gridos-card--balance .gridos-balance-meta {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.gridos-topup {
+  align-self: flex-start;
+  margin-top: 14px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  background: #0d0d0d;
+  color: #fafafa;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.gridos-topup:hover {
+  background: #18181b;
+}
+
+.gridos-card--trend {
+  display: flex;
+  flex-direction: column;
+}
+
+.gridos-trend-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.gridos-live-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(0, 255, 136, 0.15);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.gridos-mini-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 72px;
+  margin-bottom: 12px;
+}
+
+.gridos-mini-bar {
+  flex: 1;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(180deg, #00ff88, rgba(0, 255, 136, 0.25));
+  min-height: 12px;
+  opacity: 0.85;
+}
+
+.gridos-trend-foot {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #00ff88;
+}
+
+.gridos-row-bottom {
+  display: grid;
+  grid-template-columns: 1fr minmax(280px, 380px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .gridos-row-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-section-title {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-infra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.gridos-infra-card {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.15s ease;
+}
+
+.gridos-infra-card:hover {
+  border-color: rgba(0, 255, 136, 0.2);
+}
+
+.gridos-infra-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.gridos-infra-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  display: grid;
+  place-items: center;
+}
+
+.gridos-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.gridos-status-dot--standby {
+  background: #eab308;
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.4);
+}
+
+.gridos-infra-name {
+  margin: 0 0 4px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.gridos-infra-kw {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #00ff88;
+}
+
+.gridos-spark {
+  height: 28px;
+  width: 100%;
+  color: rgba(0, 255, 136, 0.6);
+}
+
+.gridos-register-node {
+  min-height: 120px;
+  border: 2px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: #71717a;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.gridos-register-node:hover {
+  border-color: rgba(0, 255, 136, 0.35);
+  color: #00ff88;
+}
+
+.gridos-settlements-card {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: min(420px, 55vh);
+}
+
+.gridos-tx-list {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gridos-tx-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.82rem;
+}
+
+.gridos-tx-row:last-child {
+  border-bottom: none;
+}
+
+.gridos-tx-type {
+  margin: 0 0 2px;
+  font-weight: 700;
+  color: #e4e4e7;
+}
+
+.gridos-tx-hash {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #52525b;
+  font-family: ui-monospace, monospace;
+}
+
+.gridos-tx-right {
+  text-align: right;
+}
+
+.gridos-tx-amount {
+  font-weight: 800;
+  text-align: right;
+}
+
+.gridos-tx-amount--credit {
+  color: #00ff88;
+}
+
+.gridos-tx-time {
+  font-size: 0.72rem;
+  color: #71717a;
+  text-align: right;
+}
+
+.gridos-tx-row > div:last-child {
+  text-align: right;
+}
+
+.gridos-ledger-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.72rem;
+  color: #71717a;
+}
+
+.gridos-ledger-foot strong {
+  color: #00ff88;
+  font-weight: 700;
+}
+
+.gridos-ledger-foot a {
+  margin-left: auto;
+  color: #00ff88;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.gridos-ledger-foot a:hover {
+  text-decoration: underline;
+}
+
+/* Metric gauge (donut) */
+.metric-gauge {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.metric-gauge__track,
+.metric-gauge__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.metric-gauge__track {
+  background: conic-gradient(#27272a 0turn, #27272a 1turn);
+}
+
+.metric-gauge__fill {
+  --pct: 0.62;
+  background: conic-gradient(
+    from -90deg,
+    #00ff88 0turn,
+    #00cc6a calc(var(--pct) * 1turn),
+    #27272a calc(var(--pct) * 1turn),
+    #27272a 1turn
+  );
+}
+
+.metric-gauge::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.metric-gauge__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  text-align: center;
+  padding: 8px;
+}
+
+.metric-gauge__label {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.metric-gauge__value {
+  margin: 2px 0 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fafafa;
+}
+
+.metric-gauge__unit {
+  font-size: 0.55em;
+  color: #00ff88;
+  font-weight: 700;
+}
+
+.metric-gauge__trend {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #00ff88;
+}
+
+/* —— Analytics —— */
+
+.gridos-page-head {
+  margin-bottom: 8px;
+}
+
+.gridos-page-title {
+  margin: 0 0 4px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.gridos-page-desc {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #a1a1aa;
+  max-width: 520px;
+  line-height: 1.45;
+}
+
+.gridos-analytics-top {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .gridos-analytics-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-usage-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gridos-usage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.gridos-usage-label {
+  margin: 0 0 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-usage-total {
+  margin: 0;
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #fafafa;
+}
+
+.gridos-usage-total span {
+  font-size: 0.45em;
+  font-weight: 700;
+  color: #00ff88;
+  margin-left: 4px;
+}
+
+.gridos-usage-delta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #00ff88;
+  white-space: nowrap;
+}
+
+.gridos-usage-delta--down {
+  color: #fb923c;
+}
+
+.gridos-chart-wrap {
+  width: 100%;
+  min-height: 160px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px 8px 8px;
+}
+
+.gridos-chart-svg {
+  width: 100%;
+  height: 140px;
+  display: block;
+}
+
+.gridos-chart-bar-label {
+  font-size: 9px;
+  fill: #71717a;
+  font-weight: 600;
+}
+
+.gridos-chart-axis {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 1;
+}
+
+.gridos-analytics-mid {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .gridos-analytics-mid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-rt-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 16px;
+}
+
+.gridos-rt-caption {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #a1a1aa;
+  max-width: 240px;
+  line-height: 1.4;
+}
+
+.gridos-units-analytics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .gridos-units-analytics {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-unit-rt {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gridos-unit-rt-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.gridos-unit-rt-name {
+  margin: 0 0 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #e4e4e7;
+}
+
+.gridos-unit-rt-kw {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #00ff88;
+  font-variant-numeric: tabular-nums;
+}
+
+.gridos-unit-rt-spark {
+  height: 32px;
+  width: 100%;
+  color: rgba(0, 255, 136, 0.55);
+}
+
+/* —— Wallet —— */
+
+.gridos-wallet-alert {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(251, 113, 133, 0.45);
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.12) 0%, rgba(127, 29, 29, 0.25) 100%);
+}
+
+.gridos-wallet-alert__icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(251, 113, 133, 0.2);
+  color: #fda4af;
+  font-weight: 900;
+  font-size: 1.1rem;
+  display: grid;
+  place-items: center;
+}
+
+.gridos-wallet-alert__title {
+  margin: 0 0 4px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fecdd3;
+}
+
+.gridos-wallet-alert__body {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #e4e4e7;
+}
+
+.gridos-wallet-alert__body strong {
+  color: #fda4af;
+}
+
+.gridos-wallet-segment {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 4px;
+  width: fit-content;
+}
+
+.gridos-wallet-segment__btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: transparent;
+  color: #a1a1aa;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gridos-wallet-segment__btn:hover {
+  color: #e4e4e7;
+}
+
+.gridos-wallet-segment__btn.is-active {
+  background: rgba(0, 255, 136, 0.16);
+  color: #00ff88;
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.35);
+}
+
+.gridos-wallet-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.1fr) minmax(240px, 0.65fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .gridos-wallet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-wallet-balance-card {
+  min-height: 200px;
+}
+
+.gridos-card--balance-low {
+  background: linear-gradient(145deg, #fbbf24 0%, #f59e0b 55%, #ea580c 100%);
+  border-color: rgba(251, 191, 36, 0.65);
+  color: #1a0a0a;
+}
+
+.gridos-card--balance-low .gridos-balance-meta,
+.gridos-card--balance-low .gridos-wallet-runtime-hint {
+  color: rgba(26, 10, 10, 0.88);
+}
+
+.gridos-wallet-runtime-hint {
+  margin: 10px 0 0;
+  font-size: 0.76rem;
+  font-weight: 600;
+  opacity: 0.88;
+  line-height: 1.4;
+}
+
+.gridos-wallet-runtime-hint--dark {
+  color: #a1a1aa;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+.gridos-wallet-postpaid-card {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gridos-wallet-postpaid-label {
+  margin: 0 0 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-wallet-postpaid-outstanding {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fafafa;
+}
+
+.gridos-wallet-postpaid-outstanding strong {
+  color: #00ff88;
+  font-weight: 800;
+}
+
+.gridos-wallet-postpaid-meta {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: #a1a1aa;
+}
+
+.gridos-wallet-postpaid-meta strong {
+  color: #e4e4e7;
+}
+
+.gridos-wallet-postpaid-power {
+  margin: 8px 0 0;
+  font-size: 0.88rem;
+  color: #d4d4d8;
+  line-height: 1.45;
+}
+
+.gridos-wallet-postpaid-power span {
+  color: #00ff88;
+  font-weight: 700;
+}
+
+.gridos-wallet-side-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gridos-wallet-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gridos-wallet-facts li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: #a1a1aa;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-wallet-facts li:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gridos-wallet-facts strong {
+  color: #fafafa;
+  font-weight: 700;
+  text-align: right;
+}
+
+.gridos-wallet-demo-btn {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #a1a1aa;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gridos-wallet-demo-btn:hover {
+  border-color: rgba(251, 113, 133, 0.4);
+  color: #fda4af;
+}
+
+/* —— P2P —— */
+
+.gridos-p2p-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .gridos-p2p-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-p2p-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gridos-p2p-stat-label {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-p2p-stat-value {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fafafa;
+}
+
+.gridos-p2p-stat-sub {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #71717a;
+}
+
+.gridos-p2p-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.gridos-p2p-table-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-p2p-table-wrap {
+  overflow-x: auto;
+}
+
+.gridos-p2p-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.gridos-p2p-table th {
+  text-align: left;
+  padding: 10px 18px;
+  color: #71717a;
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-p2p-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #d4d4d8;
+  vertical-align: middle;
+}
+
+.gridos-p2p-table tbody tr:hover {
+  background: rgba(0, 255, 136, 0.04);
+}
+
+.gridos-p2p-mono {
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  color: #e4e4e7;
+}
+
+.gridos-p2p-price {
+  color: #00ff88;
+  font-weight: 700;
+}
+
+.gridos-p2p-muted {
+  color: #a1a1aa;
+  font-size: 0.78rem;
+}
+
+.gridos-p2p-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gridos-p2p-tag--sell {
+  background: rgba(0, 255, 136, 0.12);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.25);
+}
+
+.gridos-p2p-tag--buy {
+  background: rgba(96, 165, 250, 0.12);
+  color: #93c5fd;
+  border: 1px solid rgba(96, 165, 250, 0.25);
+}
+
+.gridos-p2p-action {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gridos-p2p-action:hover {
+  background: rgba(0, 255, 136, 0.18);
+}
+
+/* —— Settings —— */
+
+.gridos-settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.gridos-settings-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gridos-settings-dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gridos-settings-dl > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-settings-dl > div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gridos-settings-dl dt {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-settings-dl dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fafafa;
+}
+
+.gridos-settings-toggles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gridos-settings-toggles li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-settings-toggles li:first-child {
+  padding-top: 0;
+}
+
+.gridos-settings-toggles li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gridos-settings-toggle-label {
+  margin: 0 0 2px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #e4e4e7;
+}
+
+.gridos-settings-toggle-hint {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #71717a;
+}
+
+.gridos-switch {
+  flex-shrink: 0;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #27272a;
+  cursor: pointer;
+  padding: 2px;
+  position: relative;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.gridos-switch.is-on {
+  background: rgba(0, 255, 136, 0.25);
+  border-color: rgba(0, 255, 136, 0.45);
+}
+
+.gridos-switch-knob {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fafafa;
+  transform: translateX(0);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.gridos-switch.is-on .gridos-switch-knob {
+  transform: translateX(20px);
+  background: #00ff88;
+}
+
+.gridos-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gridos-settings-field-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-settings-select {
+  max-width: 200px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1a1a1a;
+  color: #fafafa;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.gridos-settings-select:focus {
+  outline: none;
+  border-color: rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+}
+
+.gridos-settings-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #71717a;
+}
+
+.gridos-settings-export {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.gridos-settings-export:hover {
+  background: rgba(0, 255, 136, 0.16);
+}
+
+/* —— Deploy / Support / Logs —— */
+
+.gridos-deploy-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(240px, 320px);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .gridos-deploy-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gridos-deploy-form-card,
+.gridos-deploy-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gridos-deploy-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gridos-deploy-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gridos-deploy-field span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.gridos-deploy-input,
+.gridos-deploy-textarea {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #141414;
+  color: #fafafa;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+}
+
+.gridos-deploy-input:focus,
+.gridos-deploy-textarea:focus {
+  outline: none;
+  border-color: rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.08);
+}
+
+.gridos-deploy-textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+
+.gridos-deploy-select {
+  cursor: pointer;
+}
+
+.gridos-deploy-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #00ff88;
+  color: #0a0a0a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.gridos-deploy-submit:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.gridos-deploy-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.gridos-deploy-estimate {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gridos-deploy-estimate li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: #a1a1aa;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-deploy-estimate li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gridos-deploy-estimate strong {
+  color: #fafafa;
+  font-weight: 700;
+}
+
+.gridos-deploy-note {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #71717a;
+}
+
+.gridos-support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.gridos-support-card--primary {
+  border-color: rgba(0, 255, 136, 0.2);
+  background: linear-gradient(165deg, rgba(0, 255, 136, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+.gridos-support-email {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.gridos-support-email a {
+  color: #00ff88;
+  text-decoration: none;
+}
+
+.gridos-support-email a:hover {
+  text-decoration: underline;
+}
+
+.gridos-support-meta {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #a1a1aa;
+}
+
+.gridos-support-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.gridos-support-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #00ff88;
+  color: #0a0a0a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gridos-support-btn:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.gridos-support-btn--ghost {
+  background: transparent;
+  color: #a1a1aa;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.gridos-support-btn--ghost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.gridos-support-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gridos-support-links li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-support-links li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gridos-support-links a {
+  color: #fafafa;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.gridos-support-links a:hover {
+  color: #00ff88;
+}
+
+.gridos-support-links span {
+  font-size: 0.76rem;
+  color: #71717a;
+}
+
+.gridos-support-faq {
+  margin-top: 4px;
+}
+
+.gridos-support-faq-list {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gridos-support-faq-item {
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-support-faq-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gridos-support-faq-item dt {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #e4e4e7;
+}
+
+.gridos-support-faq-item dd {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: #a1a1aa;
+}
+
+.gridos-logs-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.gridos-logs-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.gridos-logs-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gridos-logs-filter {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
+  color: #a1a1aa;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.gridos-logs-filter.is-active {
+  border-color: rgba(0, 255, 136, 0.45);
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.gridos-logs-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.gridos-logs-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  background: rgba(0, 255, 136, 0.08);
+  color: #00ff88;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gridos-logs-btn--ghost {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: #a1a1aa;
+}
+
+.gridos-logs-view {
+  max-height: min(480px, 55vh);
+  overflow: auto;
+  padding: 8px 0;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.gridos-log-line {
+  display: grid;
+  grid-template-columns: 92px 52px 1fr;
+  gap: 10px;
+  padding: 6px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.gridos-log-time {
+  color: #71717a;
+}
+
+.gridos-log-level {
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.65rem;
+}
+
+.gridos-log-line--info .gridos-log-level {
+  color: #a1a1aa;
+}
+
+.gridos-log-line--warn .gridos-log-level {
+  color: #fbbf24;
+}
+
+.gridos-log-line--error .gridos-log-level {
+  color: #f87171;
+}
+
+.gridos-log-msg {
+  color: #d4d4d8;
+  word-break: break-word;
+}
