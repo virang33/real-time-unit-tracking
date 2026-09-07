@@ -1,13 +1,13 @@
 :root {
-  --bg: #0d0d0d;
-  --bg-secondary: #141414;
-  --card: #121212;
-  --field: #1a1a1a;
-  --text: #fafafa;
-  --muted: #a1a1aa;
-  --line: rgba(255, 255, 255, 0.1);
-  --primary: #00ff88;
-  --primary-hover: #00e67a;
+  --bg: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --card: #ffffff;
+  --field: #e0e0e0;
+  --text: #000000;
+  --muted: #666666;
+  --line: rgba(0, 0, 0, 0.1);
+  --primary: #1e7ec2;
+  --primary-hover: #4f7c87;
   --danger: #f87171;
 }
 
@@ -82,13 +82,13 @@ body {
 }
 
 .input-control::placeholder {
-  color: #52525b;
+  color: #94a3b8;
 }
 
 .input-control:focus {
   outline: none;
-  border-color: rgba(0, 255, 136, 0.65);
-  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.12);
+  border-color: rgba(30, 126, 194, 0.65);
+  box-shadow: 0 0 0 3px rgba(30, 126, 194, 0.12);
 }
 
 .input-error {

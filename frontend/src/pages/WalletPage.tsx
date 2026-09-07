@@ -1,16 +1,76 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Card from "../components/dashboard/Card";
 import TransactionRow from "../components/dashboard/TransactionRow";
+import PaymentGatewayModal, { type PaymentSuccessData } from "../components/wallet/PaymentGatewayModal";
 import { formatRs, formatSignedRsFromUsdt } from "../utils/inrFormat";
+import {
+  getRealtimeBalance,
+  resetRealtimeBalance,
+  HOURLY_BURN_USDT,
+} from "../utils/realtimeBalance";
 
 const STORAGE_MODE = "gridos-wallet-billing";
-const STORAGE_BALANCE = "gridos-wallet-balance";
+const STORAGE_TXS = "gridos-wallet-activity-txs";
 
 /** Matches dashboard “cost / hour” for runtime estimate */
-const HOURLY_BURN_USDT = 4.12;
-const LOW_BALANCE_USDT = 500;
+const LOW_BALANCE_USDT = 0;
 
 type BillingMode = "prepaid" | "postpaid";
+
+type TxItem = {
+  id: string;
+  type: string;
+  hash: string;
+  amount: string;
+  credit?: boolean;
+  time: string;
+};
+
+const INITIAL_TXS: TxItem[] = [
+  {
+    id: "tx-1",
+    type: "Top-up",
+    hash: "0xfeed…a901",
+    amount: formatSignedRsFromUsdt(0, true),
+    credit: true,
+    time: "1d ago",
+  },
+  {
+    id: "tx-2",
+    type: "Grid consumption",
+    hash: "0x88aa…3c10",
+    amount: formatSignedRsFromUsdt(0, false),
+    time: "3h ago",
+  },
+  {
+    id: "tx-3",
+    type: "Validator reward",
+    hash: "0x91be…8f04",
+    amount: formatSignedRsFromUsdt(0, true),
+    credit: true,
+    time: "6h ago",
+  },
+  {
+    id: "tx-4",
+    type: "P2P settlement",
+    hash: "0x7a3f…c21d",
+    amount: formatSignedRsFromUsdt(0, false),
+    time: "2d ago",
+  },
+];
+
+function readStoredTxs(): TxItem[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_TXS);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {
+    /* ignore */
+  }
+  return INITIAL_TXS;
+}
 
 function readMode(): BillingMode {
   try {
@@ -20,19 +80,6 @@ function readMode(): BillingMode {
     /* ignore */
   }
   return "prepaid";
-}
-
-function readBalance(): number {
-  try {
-    const v = localStorage.getItem(STORAGE_BALANCE);
-    if (v != null) {
-      const n = Number(v);
-      if (Number.isFinite(n) && n >= 0) return n;
-    }
-  } catch {
-    /* ignore */
-  }
-  return 14284.92;
 }
 
 function formatRuntimeFromBalance(balanceUsdt: number) {
@@ -60,7 +107,9 @@ function formatRuntimeFromBalance(balanceUsdt: number) {
 
 export default function WalletPage() {
   const [billingMode, setBillingMode] = useState<BillingMode>(readMode);
-  const [prepaidBalance, setPrepaidBalance] = useState(readBalance);
+  const [prepaidBalance, setPrepaidBalance] = useState(getRealtimeBalance);
+  const [isGatewayOpen, setIsGatewayOpen] = useState(false);
+  const [transactions, setTransactions] = useState<TxItem[]>(readStoredTxs);
 
   useEffect(() => {
     try {
@@ -72,17 +121,45 @@ export default function WalletPage() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_BALANCE, String(prepaidBalance));
+      localStorage.setItem(STORAGE_TXS, JSON.stringify(transactions));
     } catch {
       /* ignore */
     }
-  }, [prepaidBalance]);
+  }, [transactions]);
+
+  useEffect(() => {
+    const refreshBalance = () => setPrepaidBalance(getRealtimeBalance());
+    const interval = setInterval(refreshBalance, 1000);
+    window.addEventListener("storage", refreshBalance);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", refreshBalance);
+    };
+  }, []);
 
   const isPrepaidLow = billingMode === "prepaid" && prepaidBalance < LOW_BALANCE_USDT;
   const runtime = useMemo(() => formatRuntimeFromBalance(prepaidBalance), [prepaidBalance]);
 
-  const onTopUp = useCallback(() => {
-    setPrepaidBalance((b) => Math.round((b + 2500) * 100) / 100);
+  const onOpenGateway = useCallback(() => {
+    setIsGatewayOpen(true);
+  }, []);
+
+  const handlePaymentSuccess = useCallback((data: PaymentSuccessData) => {
+    setPrepaidBalance(getRealtimeBalance());
+    const newTx: TxItem = {
+      id: data.transactionId,
+      type: `Top-up (${data.paymentMethod})`,
+      hash: `0x${Math.random().toString(16).slice(2, 6)}…${Math.random().toString(16).slice(2, 6)}`,
+      amount: `+Rs. ${data.amountInr.toLocaleString("en-IN")}.00`,
+      credit: true,
+      time: "Just now",
+    };
+    setTransactions((prev) => [newTx, ...prev]);
+  }, []);
+
+  const onResetBalance = useCallback(() => {
+    const zeroed = resetRealtimeBalance();
+    setPrepaidBalance(zeroed);
   }, []);
 
   return (
@@ -142,7 +219,7 @@ export default function WalletPage() {
               <p className="gridos-balance-meta">Est. time to stay powered on: {runtime.label}</p>
               <p className="gridos-wallet-runtime-hint">{runtime.sub}</p>
             </div>
-            <button type="button" className="gridos-topup" onClick={onTopUp}>
+            <button type="button" className="gridos-topup" onClick={onOpenGateway}>
               Top up
             </button>
           </Card>
@@ -150,11 +227,11 @@ export default function WalletPage() {
           <Card className="gridos-wallet-postpaid-card">
             <p className="gridos-wallet-postpaid-label">Postpaid account</p>
             <p className="gridos-wallet-postpaid-outstanding">
-              Cycle to date: <strong>{formatRs(312.4)}</strong>
+              Cycle to date: <strong>{formatRs(0)}</strong>
             </p>
             <p className="gridos-wallet-postpaid-meta">
-              Credit limit <strong>{formatRs(5000)}</strong> · Next statement in{" "}
-              <strong>12 days</strong>
+              Credit limit <strong>{formatRs(0)}</strong> · Next statement in{" "}
+              <strong>0 days</strong>
             </p>
             <p className="gridos-wallet-postpaid-power">
               Power-on: <span>not limited</span> by wallet balance while within limit.
@@ -202,9 +279,9 @@ export default function WalletPage() {
             <button
               type="button"
               className="gridos-wallet-demo-btn"
-              onClick={() => setPrepaidBalance(85)}
+              onClick={onResetBalance}
             >
-              Demo: set low balance
+              Reset balance to 0
             </button>
           ) : null}
         </Card>
@@ -213,34 +290,26 @@ export default function WalletPage() {
       <section className="gridos-settlements-card">
         <h3 className="gridos-section-title">Wallet activity</h3>
         <div className="gridos-tx-list">
-          <TransactionRow
-            type="Top-up"
-            hash="0xfeed…a901"
-            amount={formatSignedRsFromUsdt(2500, true)}
-            credit
-            time="1d ago"
-          />
-          <TransactionRow
-            type="Grid consumption"
-            hash="0x88aa…3c10"
-            amount={formatSignedRsFromUsdt(18.44, false)}
-            time="3h ago"
-          />
-          <TransactionRow
-            type="Validator reward"
-            hash="0x91be…8f04"
-            amount={formatSignedRsFromUsdt(12.55, true)}
-            credit
-            time="6h ago"
-          />
-          <TransactionRow
-            type="P2P settlement"
-            hash="0x7a3f…c21d"
-            amount={formatSignedRsFromUsdt(42.1, false)}
-            time="2d ago"
-          />
+          {transactions.map((tx) => (
+            <TransactionRow
+              key={tx.id}
+              type={tx.type}
+              hash={tx.hash}
+              amount={tx.amount}
+              credit={tx.credit}
+              time={tx.time}
+            />
+          ))}
         </div>
       </section>
+
+      {/* GridOS Secure Payment Gateway Modal */}
+      <PaymentGatewayModal
+        isOpen={isGatewayOpen}
+        onClose={() => setIsGatewayOpen(false)}
+        onSuccess={handlePaymentSuccess}
+      />
     </>
   );
 }
+

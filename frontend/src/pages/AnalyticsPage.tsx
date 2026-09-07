@@ -4,10 +4,10 @@ import MetricGauge from "../components/dashboard/MetricGauge";
 import { IconBattery, IconEv, IconFan } from "../components/dashboard/gridosIcons";
 import { MonthlyLineChart, WeeklyBarChart } from "../components/analytics/UsageCharts";
 
-const WEEKLY_KWH = [42, 55, 38, 62, 48, 51, 45];
+const WEEKLY_KWH = [0, 0, 0, 0, 0, 0, 0];
 const WEEKLY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const MONTHLY_KWH = [1180, 1320, 1090, 1245, 1380, 1210, 1295, 1410, 1188, 1305, 1270, 1355];
+const MONTHLY_KWH = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const MONTHLY_LABELS = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 
 function useJitteredValue(initial: number, min: number, max: number, intervalMs = 1600) {
@@ -80,12 +80,12 @@ export default function AnalyticsPage() {
   const weeklyTotal = WEEKLY_KWH.reduce((a, b) => a + b, 0);
   const monthlyTotal = MONTHLY_KWH.reduce((a, b) => a + b, 0);
 
-  const liveAggregate = useJitteredValue(14.8, 13.2, 16.1, 1400);
-  const fillPortion = Math.min(0.92, Math.max(0.35, (liveAggregate - 10) / 12));
+  const liveAggregate = useJitteredValue(0, 0, 0, 1400);
+  const fillPortion = 0;
 
-  const hvacKw = useJitteredValue(3.24, 2.7, 3.85, 1500);
-  const storageKw = useJitteredValue(0.82, 0.55, 1.05, 1700);
-  const evKw = useJitteredValue(0.05, 0, 0.22, 2000);
+  const hvacKw = useJitteredValue(0, 0, 0, 1500);
+  const storageKw = useJitteredValue(0, 0, 0, 1700);
+  const evKw = useJitteredValue(0, 0, 0, 2000);
 
   const weeklyTrendPct = weekHalfOverHalfChange(WEEKLY_KWH);
   const trendWeekly =
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
                 <span>MWh</span>
               </p>
             </div>
-            <span className="gridos-usage-delta">+6.2% vs prior year</span>
+            <span className="gridos-usage-delta">0% vs prior year</span>
           </div>
           <div className="gridos-chart-wrap">
             <MonthlyLineChart labels={MONTHLY_LABELS} valuesKwh={MONTHLY_KWH} />

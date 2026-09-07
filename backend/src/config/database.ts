@@ -5,7 +5,16 @@ import { config } from './config';
 
 // Get database configuration
 const environment: string = env.NODE_ENV;
-const databaseConfiguration = config[environment];
+// Load DB config from environment variables if present
+const databaseConfiguration = {
+  host: process.env.DB_HOST || config[environment].host,
+  port: Number(process.env.DB_PORT) || config[environment].port,
+  username: process.env.DB_USERNAME || config[environment].username,
+  password: process.env.DB_PASSWORD || config[environment].password,
+  database: process.env.DB_NAME || config[environment].database,
+  dialect: (process.env.DB_DIALECT as any) || config[environment].dialect,
+  logging: config[environment].logging,
+};
 
 // Create database configuration without database name (for creating database)
 const dbConfigurationWithoutDatabase = {

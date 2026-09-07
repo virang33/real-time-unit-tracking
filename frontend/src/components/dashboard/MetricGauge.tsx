@@ -14,7 +14,7 @@ export default function MetricGauge({
   value,
   unit,
   trend,
-  fillPortion = 0.62,
+  fillPortion = 0,
 }: MetricGaugeProps) {
   return (
     <div className="metric-gauge" aria-label={`${label} ${value} ${unit}`}>

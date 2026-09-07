@@ -91,11 +91,11 @@ export default function DeployContractPage() {
           <ul className="gridos-deploy-estimate">
             <li>
               <span>Gas (mock)</span>
-              <strong>~1.24M units</strong>
+              <strong>0 units</strong>
             </li>
             <li>
               <span>Deploy fee (mock)</span>
-              <strong>{formatRs(29.1)}</strong>
+              <strong>{formatRs(0)}</strong>
             </li>
             <li>
               <span>Compiler</span>

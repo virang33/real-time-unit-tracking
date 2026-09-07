@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import Card from "../components/dashboard/Card";
 import { USDT_TO_INR } from "../utils/inrFormat";
+import { getUser } from "../utils/token";
 
+const KEY_NODE_NAME = "gridos-settings-node-name";
+const KEY_NODE_ID = "gridos-settings-node-id";
 const KEY_NOTIFY_LOW = "gridos-settings-notify-low";
 const KEY_NOTIFY_SETTLE = "gridos-settings-notify-settle";
 const KEY_NOTIFY_P2P = "gridos-settings-notify-p2p";
 const KEY_DATA_RETENTION = "gridos-settings-retention";
+// New key for low balance threshold (numeric value in USDT)
+const KEY_LOW_THRESHOLD = "gridos-settings-low-threshold";
 
 function readBool(key: string, defaultVal: boolean): boolean {
   try {
@@ -28,11 +33,37 @@ function readString(key: string, fallback: string): string {
   return fallback;
 }
 
+function readNumber(key: string, fallback: number): number {
+  try {
+    const v = localStorage.getItem(key);
+    if (v != null && v.length > 0) {
+      const n = Number(v);
+      if (!isNaN(n)) return n;
+    }
+  } catch {
+    /* ignore */
+  }
+  return fallback;
+}
+
 export default function SettingsPage() {
+  const user = getUser();
+  const [nodeName, setNodeName] = useState(() => readString(KEY_NODE_NAME, user?.name || "ALPHA-01"));
+  const [nodeId, setNodeId] = useState(() => readString(KEY_NODE_ID, "0x7f3a…e901"));
   const [notifyLow, setNotifyLow] = useState(() => readBool(KEY_NOTIFY_LOW, true));
   const [notifySettle, setNotifySettle] = useState(() => readBool(KEY_NOTIFY_SETTLE, true));
   const [notifyP2P, setNotifyP2P] = useState(() => readBool(KEY_NOTIFY_P2P, true));
-  const [retention, setRetention] = useState(() => readString(KEY_DATA_RETENTION, "90"));
+  const [retention, setRetention] = useState(() => readString(KEY_DATA_RETENTION, "0"));
+  // New state for low balance threshold (default 0 USDT)
+  const [lowThreshold, setLowThreshold] = useState(() => readNumber(KEY_LOW_THRESHOLD, 0));
+
+  useEffect(() => {
+    localStorage.setItem(KEY_NODE_NAME, nodeName);
+  }, [nodeName]);
+
+  useEffect(() => {
+    localStorage.setItem(KEY_NODE_ID, nodeId);
+  }, [nodeId]);
 
   useEffect(() => {
     try {
@@ -66,9 +97,36 @@ export default function SettingsPage() {
     }
   }, [retention]);
 
+  // Persist low balance threshold whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(KEY_LOW_THRESHOLD, lowThreshold.toString());
+    } catch {
+      /* ignore */
+    }
+  }, [lowThreshold]);
+
   const onExport = useCallback(() => {
-    window.alert("Export would download ledger CSV (demo).");
-  }, []);
+    const rows = [
+      ["Setting", "Value"],
+      ["Node display name", nodeName],
+      ["Node ID", nodeId],
+      ["Validator", "Verified"],
+      ["Low prepaid balance notifications", notifyLow ? "Enabled" : "Disabled"],
+      ["Low balance threshold (USDT)", String(lowThreshold)],
+      ["Settlement receipt notifications", notifySettle ? "Enabled" : "Disabled"],
+      ["P2P match notifications", notifyP2P ? "Enabled" : "Disabled"],
+      ["Ledger history (days)", retention],
+      ["USDT to INR display rate", String(USDT_TO_INR)],
+    ];
+    const csv = rows.map((row) => row.map((value) => `"${value.replaceAll('"', '""')}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "grid-os-settings.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [nodeName, nodeId, notifyLow, notifySettle, notifyP2P, lowThreshold, retention]);
 
   return (
     <>
@@ -85,11 +143,25 @@ export default function SettingsPage() {
           <dl className="gridos-settings-dl">
             <div>
               <dt>Display name</dt>
-              <dd>ALPHA-01</dd>
+              <dd>
+                <input
+                  className="gridos-settings-select"
+                  value={nodeName}
+                  onChange={(event) => setNodeName(event.target.value)}
+                  aria-label="Node display name"
+                />
+              </dd>
             </div>
             <div>
               <dt>Node ID</dt>
-              <dd className="gridos-p2p-mono">0x7f3a…e901</dd>
+              <dd>
+                <input
+                  className="gridos-settings-select gridos-p2p-mono"
+                  value={nodeId}
+                  onChange={(event) => setNodeId(event.target.value)}
+                  aria-label="Node ID"
+                />
+              </dd>
             </div>
             <div>
               <dt>Validator</dt>
@@ -117,6 +189,22 @@ export default function SettingsPage() {
               >
                 <span className="gridos-switch-knob" />
               </button>
+            </li>
+            {/* New threshold input row */}
+            <li>
+              <div>
+                <p className="gridos-settings-toggle-label">Low balance threshold (USDT)</p>
+                <p className="gridos-settings-toggle-hint">Set the amount that triggers a low‑balance alert</p>
+              </div>
+              <input
+                type="number"
+                min="0"
+                step="0.1"
+                value={lowThreshold}
+                onChange={(e) => setLowThreshold(Number(e.target.value))}
+                className="gridos-settings-select"
+                style={{ width: "80px" }}
+              />
             </li>
             <li>
               <div>
