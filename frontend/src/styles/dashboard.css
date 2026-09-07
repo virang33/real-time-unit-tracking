@@ -89,6 +89,12 @@
   border-radius: 50%;
   background: #2fce8f;
   box-shadow: 0 0 0 3px rgba(47, 206, 143, 0.18);
+  transition: all 0.3s ease;
+}
+
+.ac-status-dot--offline {
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
 }
 
 .ac-metrics-grid {

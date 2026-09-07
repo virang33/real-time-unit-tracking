@@ -49,6 +49,16 @@ export default function DashboardPage() {
     };
   }, []);
 
+  // Consider online if telemetry was received within the last 6 seconds
+  const isOnline = Boolean(
+    telemetry.updatedAt &&
+    Date.now() - new Date(telemetry.updatedAt).getTime() < 6000
+  );
+
+  const deviceDisplayName = isOnline
+    ? (telemetry.deviceId === "ESP32-GRID-NODE-01" ? "ESP32 (MyPhone)" : (telemetry.deviceId || "ESP32 Connected"))
+    : "ESP32 Offline (Disconnected)";
+
   const metrics = [
     {
       title: "VOLTAGE",
@@ -125,13 +135,13 @@ export default function DashboardPage() {
   ];
 
   const summaryRows = [
-    { label: "CONNECTION", value: telemetry.deviceId === "ESP32-GRID-NODE-01" ? "ESP32 (MyPhone)" : (telemetry.deviceId || "ESP32 Connected") },
-    { label: "VOLTAGE", value: `${telemetry.voltage || 0} V` },
-    { label: "CURRENT", value: `${telemetry.current || 0} A` },
-    { label: "POWER", value: `${telemetry.power || 0} W` }
+    { label: "CONNECTION", value: deviceDisplayName },
+    { label: "VOLTAGE", value: isOnline ? `${telemetry.voltage || 0} V` : "0.0 V (Offline)" },
+    { label: "CURRENT", value: isOnline ? `${telemetry.current || 0} A` : "0.00 A" },
+    { label: "POWER", value: isOnline ? `${telemetry.power || 0} W` : "0.0 W" }
   ];
 
-  const hasPower = (telemetry.power || 0) > 0;
+  const hasPower = isOnline && (telemetry.power || 0) > 0;
 
   return (
     <div className="ac-dashboard-wrapper">
@@ -149,12 +159,10 @@ export default function DashboardPage() {
         </div>
 
         <div className="ac-device-status">
-          <span className="ac-device-label">Connected Device</span>
+          <span className="ac-device-label">Device Status</span>
           <div className="ac-device-value">
-            <span className="ac-status-dot" />
-            {telemetry.deviceId
-              ? (telemetry.deviceId === "ESP32-GRID-NODE-01" ? "ESP32 (MyPhone)" : telemetry.deviceId)
-              : "ESP32 Connected"}
+            <span className={`ac-status-dot ${!isOnline ? "ac-status-dot--offline" : ""}`} />
+            {deviceDisplayName}
           </div>
         </div>
       </header>
