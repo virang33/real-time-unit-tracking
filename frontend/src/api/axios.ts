@@ -1,4 +1,10 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:11020/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!API_BASE_URL && !import.meta.env.DEV) {
+  throw new Error("VITE_API_BASE_URL must be configured for production builds");
+}
+
+const resolvedApiBaseUrl = API_BASE_URL ?? "http://localhost:11020/api";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -11,7 +17,7 @@ type ApiOptions = {
 export async function apiRequest<T>(path: string, options: ApiOptions = {}): Promise<T> {
   const { method = "GET", body, token } = options;
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${resolvedApiBaseUrl}${path}`, {
     method,
     headers: {
       "Content-Type": "application/json",

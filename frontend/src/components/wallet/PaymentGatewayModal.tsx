@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { addRealtimeBalanceInr } from "../../utils/realtimeBalance";
 
 export type PaymentSuccessData = {
@@ -42,13 +42,12 @@ export default function PaymentGatewayModal({
   const [processingStep, setProcessingStep] = useState<number>(0);
   const [generatedTxnId, setGeneratedTxnId] = useState<string>("");
 
-  useEffect(() => {
-    if (isOpen) {
-      setStatus("idle");
-      setProcessingStep(0);
-      setGeneratedTxnId("");
-    }
-  }, [isOpen]);
+  const handleClose = () => {
+    setStatus("idle");
+    setProcessingStep(0);
+    setGeneratedTxnId("");
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -121,7 +120,7 @@ export default function PaymentGatewayModal({
   };
 
   return (
-    <div className="pg-overlay" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="pg-overlay" onClick={handleClose} role="dialog" aria-modal="true">
       <div className="pg-modal" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="pg-header">
@@ -141,7 +140,7 @@ export default function PaymentGatewayModal({
           <button
             type="button"
             className="pg-close-btn"
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close payment modal"
           >
             ✕

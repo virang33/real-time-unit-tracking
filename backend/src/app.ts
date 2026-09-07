@@ -15,7 +15,7 @@ export class App {
 
         this.express.use(express.json({ limit: '200mb' }));
         this.express.use(cors({
-            origin: '*',
+            origin: env.FRONT_URL,
             methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
             allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'access-token']
         }));
