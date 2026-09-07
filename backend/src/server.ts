@@ -16,9 +16,8 @@ const httpServer = createServer(app.express);
 
 export let sequelize: Sequelize;
 
-try {
-    (async () => {
-
+(async () => {
+    try {
         // Initialize database connection
         sequelize = await initializeDatabase();
 
@@ -26,9 +25,6 @@ try {
         initMySQLModels(sequelize);
         Logger.info('Models, associations, and hooks initialized successfully.');
 
-        // alter: false prevents automatic table modifications
-        // This avoids issues with MySQL's 64 key limit and table structure conflicts
-        // Use migrations for schema changes in production
         await sequelize.sync({ alter: false });
         Logger.info('Database and models synchronized successfully.');
 
@@ -39,14 +35,12 @@ try {
         } else {
             Logger.info('Database seeders skipped.');
         }
+    } catch (err) {
+        Logger.error('MySQL database is not connected (continuing with live-data in-memory mode):', err);
+    }
 
-        // Start the server
-        httpServer.listen(port, async () => {
-            Logger.info(`Server is running on port ${port}... 🚀🚀`);
-        });
-
-    })();
-} catch (err) {
-    Logger.error('Error: ', err);
-    Logger.error('Unable to connect to the database.');
-}
+    // Start the server
+    httpServer.listen(port, async () => {
+        Logger.info(`Server is running on port ${port}... 🚀🚀`);
+    });
+})();

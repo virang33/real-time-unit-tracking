@@ -20,11 +20,11 @@
 
 // ==================== CONFIGURATION ====================
 // 1. WiFi Credentials (e.g., Home Wi-Fi or Mobile Hotspot 2.4GHz)
-const char* WIFI_SSID     = "YOUR_WIFI_OR_HOTSPOT_NAME";
-const char* WIFI_PASSWORD = "YOUR_HOTSPOT_PASSWORD";
+const char* WIFI_SSID     = "MyPhone";
+const char* WIFI_PASSWORD = "12345678";
 
 // 2. GridOS Backend Server URL (Configured for your local machine)
-const char* SERVER_URL    = "http://10.227.16.238:11020/api/live-data";
+const char* SERVER_URL    = "http://172.26.145.126:11020/api/live-data";
 const char* DEVICE_ID     = "ESP32-GRID-NODE-01";
 
 // 3. Pin Definitions
@@ -72,19 +72,25 @@ void loop() {
 }
 
 void connectWiFi() {
-  // Speed up connection: disable Wi‑Fi sleep and enable auto‑reconnect
-  WiFi.setSleep(false);
-  WiFi.setAutoReconnect(true);
+  if (WiFi.status() == WL_CONNECTED) {
+    return;
+  }
 
+  Serial.println();
   Serial.print(F("[WiFi] Connecting to: "));
   Serial.println(WIFI_SSID);
 
+  WiFi.disconnect(true);
+  delay(500);
+
   WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true);
+  WiFi.setSleep(false);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-  // Try longer (60 attempts) with a shorter delay (250 ms) → ~15 s total
-  const int maxAttempts = 60;
-  const int delayMs = 250;
+  // Try up to ~15 seconds
+  const int maxAttempts = 30;
+  const int delayMs = 500;
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < maxAttempts) {
     delay(delayMs);
@@ -99,7 +105,7 @@ void connectWiFi() {
     Serial.println(WiFi.localIP());
     digitalWrite(STATUS_LED, HIGH);
   } else {
-    Serial.println(F("\n[WiFi] Connection timed out after ~15 s. Will retry on next loop."));
+    Serial.println(F("\n[WiFi] Connection timed out. Will retry on next loop."));
     digitalWrite(STATUS_LED, LOW);
   }
 }
