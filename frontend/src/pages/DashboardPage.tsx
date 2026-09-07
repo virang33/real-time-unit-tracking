@@ -125,7 +125,7 @@ export default function DashboardPage() {
   ];
 
   const summaryRows = [
-    { label: "CONNECTION", value: telemetry.deviceId || "ESP32 Online" },
+    { label: "CONNECTION", value: telemetry.deviceId === "ESP32-GRID-NODE-01" ? "ESP32 (MyPhone)" : (telemetry.deviceId || "ESP32 Connected") },
     { label: "VOLTAGE", value: `${telemetry.voltage || 0} V` },
     { label: "CURRENT", value: `${telemetry.current || 0} A` },
     { label: "POWER", value: `${telemetry.power || 0} W` }
@@ -149,10 +149,12 @@ export default function DashboardPage() {
         </div>
 
         <div className="ac-device-status">
-          <span className="ac-device-label">Device</span>
+          <span className="ac-device-label">Connected Device</span>
           <div className="ac-device-value">
             <span className="ac-status-dot" />
-            {telemetry.deviceId || "ESP32 Online"}
+            {telemetry.deviceId
+              ? (telemetry.deviceId === "ESP32-GRID-NODE-01" ? "ESP32 (MyPhone)" : telemetry.deviceId)
+              : "ESP32 Connected"}
           </div>
         </div>
       </header>
