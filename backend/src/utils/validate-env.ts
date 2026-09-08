@@ -8,12 +8,7 @@ const env = cleanEnv(process.env, {
     API_URL: str(),
     FRONT_URL: str(),
 
-    // Database Configuration
-    MYSQL_USER: str(),
-    MYSQL_PASSWORD: str(),
-    MYSQL_HOST: str(),
-    MYSQL_PORT: port(),
-    DB_NAME: str(),
+    MONGODB_URI: str(),
 
     SECRET_KEY: str(),
 

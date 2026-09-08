@@ -2,10 +2,10 @@
   "name": "real-time-unit-tracking-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.ts",
+    "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
     "build": "rimraf dist && tsc && npm run copy-content",
     "copy-content": "copyfiles -u 1 \"src/contents/**/*\" dist"
@@ -25,10 +25,9 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.15.3",
+    "mongoose": "^8.4.0",
     "nodemailer": "^7.0.12",
     "nodemon": "^3.1.11",
-    "sequelize": "^6.37.7",
     "ts-node": "^10.9.2",
     "uuid": "^8.3.2",
     "winston": "^3.18.3",
@@ -44,7 +43,6 @@
     "@types/nodemailer": "^7.0.5",
     "@types/uuid": "^8.3.4",
     "rimraf": "^6.1.2",
-    "sequelize-cli": "^6.6.3",
     "typescript": "^5.9.3"
   }
 }
