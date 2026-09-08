@@ -14,9 +14,9 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h> // Install 'ArduinoJson' by Benoit Blanchon from Library Manager
+#include <Preferences.h>
+#include <PZEM004Tv30.h>
 
-// Optional: PZEM-004T v3.0 library
-// #include <PZEM004Tv30.h>
 
 // ==================== CONFIGURATION ====================
 // 1. WiFi Credentials (e.g., Home Wi-Fi or Mobile Hotspot 2.4GHz)
@@ -35,10 +35,14 @@ const char* DEVICE_ID     = "ESP32-GRID-NODE-01";
 
 // Send telemetry every 2 seconds
 const unsigned long SEND_INTERVAL_MS = 2000;
+const unsigned long ENERGY_PERSIST_INTERVAL_MS = 60000;
 unsigned long lastSendTime = 0;
+unsigned long lastEnergySampleTime = 0;
+unsigned long lastEnergyPersistTime = 0;
+float accumulatedEnergy = 0.0;
+Preferences energyStorage;
 
-// Uncomment below if using hardware PZEM-004T v3.0 module:
-// PZEM004Tv30 pzem(Serial2, PZEM_RX_PIN, PZEM_TX_PIN);
+PZEM004Tv30 pzem(Serial2, PZEM_RX_PIN, PZEM_TX_PIN);
 
 void setup() {
   Serial.begin(115200);
@@ -53,6 +57,15 @@ void setup() {
   pinMode(STATUS_LED, OUTPUT);
   digitalWrite(RELAY_PIN, HIGH); // Default: Relay closed (Power ON)
   digitalWrite(STATUS_LED, LOW);
+
+  energyStorage.begin("energy", false);
+  accumulatedEnergy = energyStorage.getFloat("totalKwh", 0.0f);
+  lastEnergySampleTime = millis();
+  lastEnergyPersistTime = lastEnergySampleTime;
+
+  Serial.print(F("[Energy] Restored total: "));
+  Serial.print(accumulatedEnergy, 4);
+  Serial.println(F(" kWh"));
 
   // Connect to WiFi
   connectWiFi();
@@ -75,6 +88,8 @@ void connectWiFi() {
   if (WiFi.status() == WL_CONNECTED) {
     return;
   }
+
+  energyStorage.putFloat("totalKwh", accumulatedEnergy);
 
   Serial.println();
   Serial.print(F("[WiFi] Connecting to: "));
@@ -104,6 +119,7 @@ void connectWiFi() {
     Serial.print(F("[WiFi] ESP32 IP Address: "));
     Serial.println(WiFi.localIP());
     digitalWrite(STATUS_LED, HIGH);
+    lastEnergySampleTime = millis();
   } else {
     Serial.println(F("\n[WiFi] Connection timed out. Will retry on next loop."));
     digitalWrite(STATUS_LED, LOW);
@@ -115,24 +131,27 @@ void readAndTransmitTelemetry() {
     return;
   }
 
-  // Sample values (replace with actual pzem.voltage(), pzem.current(), etc.)
-  // If PZEM-004T is connected:
-  /*
   float voltage     = pzem.voltage();
   float current     = pzem.current();
   float power       = pzem.power();
-  float energy      = pzem.energy();
   float frequency   = pzem.frequency();
   float powerFactor = pzem.pf();
-  */
 
-  // No dummy values: report zero until a real PZEM sensor is enabled.
-  float voltage = 0.0;
-  float current = 0.0;
-  float power = 0.0;
-  float accumulatedEnergy = 0.0;
-  float frequency = 0.0;
-  float powerFactor = 0.0;
+  if (isnan(voltage) || isnan(current) || isnan(power) || isnan(frequency) || isnan(powerFactor)) {
+    Serial.println(F("[PZEM] Read failed; keeping the last stored energy total"));
+    return;
+  }
+
+  unsigned long now = millis();
+  float elapsedHours = (now - lastEnergySampleTime) / 3600000.0f;
+  if (power > 0.0f && elapsedHours > 0.0f) {
+    accumulatedEnergy += (power * elapsedHours) / 1000.0f;
+    if (now - lastEnergyPersistTime >= ENERGY_PERSIST_INTERVAL_MS) {
+      energyStorage.putFloat("totalKwh", accumulatedEnergy);
+      lastEnergyPersistTime = now;
+    }
+  }
+  lastEnergySampleTime = now;
 
   // Build JSON Payload
   StaticJsonDocument<256> doc;
