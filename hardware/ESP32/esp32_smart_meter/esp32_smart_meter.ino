@@ -126,10 +126,11 @@ void readAndTransmitTelemetry() {
   float powerFactor = pzem.pf();
   */
 
-  // Fallback demo/analog readings:
+  // Fallback readings for a 9 W lamp when no PZEM sensor is connected.
   float voltage     = 230.0 + (random(-15, 15) / 10.0); // e.g. 228.5V - 231.5V
-  float current     = 0.85 + (random(-5, 5) / 100.0);   // e.g. 0.80A - 0.90A
-  float power       = voltage * current;                // ~195 W
+  float lampPower   = 9.0;
+  float current     = lampPower / voltage;              // approximately 0.039 A
+  float power       = voltage * current;                // approximately 9 W
   static float accumulatedEnergy = 0.05;                // kWh
   accumulatedEnergy += (power * (SEND_INTERVAL_MS / 1000.0)) / 3600000.0;
   float frequency   = 50.0 + (random(-2, 2) / 10.0);
